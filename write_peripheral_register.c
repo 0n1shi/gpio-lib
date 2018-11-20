@@ -24,7 +24,7 @@
 #define SET(n) (1 << n)
 #define CLR(n) (1 << n)
 
-#define PIN_NUMBER 4
+#define PIN_NUMBER 3
 #define SLEEP_SEC 1
 
 int main(int argc, char* argv[]) {
