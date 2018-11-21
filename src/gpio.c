@@ -44,20 +44,50 @@ void gpio_terminate(void)
   return;
 }
 
+// pin_init(3, PIN_MODE_OUT);
+void pin_init(unsigned int pin_number, int mode)
+{
+  int num_reg = (pin_number / 10);
+  int offset = (pin_number % 10);
+  int addr = gpio_address + GPFSEL0_OFFSET + (REG_GAP * num_reg);
+  MEMORY(addr) = SEL(offset, mode);
+  return;
+}
+
+void pin_write(unsigned int pin_number)
+{
+  int num_reg = (pin_number / 32);
+  int offset = (pin_number % 32);
+  int addr = gpio_address + GPSET0_OFFSET + (REG_GAP * num_reg);
+  MEMORY(addr) = SET(offset);
+  return;
+}
+
+/*
+void gpio_read(unsigned int pin_number)
+{
+  int num_sel_reg = (pin_number / 32);
+  int offset = (pin_number % 32);
+  int addr = gpio_address + GPLEV0_OFFSET + (REG_GAP * num_sel_reg);
+
+  MEMORY(addr) = SET(offset);
+  return;
+}
+
 int pin_init(int pin_number, int pin_mode)
 {
-  int num_sel_reg = (pin_number % NUM_SEL_REG) - 1;
-  int addr = GPFSEL0_OFFSET + (REG_GAP * num_sel_reg);
+  int num_sel_reg;
+  int addr;
   int mode;
   
   if (pin_mode == PIN_MODE_IN) {
     mode = PIN_MODE_IN;
+    num_sel_reg = (pin / 32);
+    addr = gpio_address + GPFSEL0_OFFSET + (REG_GAP * num_sel_reg);
   } else if (pin_mode == PIN_MODE_OUT) {
-    mode = PIN_MODE_OUT;
   } else {
     perror("failed to set pin mode. (invalid mode designated)\n");
     return -1;
   }
-
-
 }
+*/
