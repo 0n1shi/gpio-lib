@@ -44,22 +44,31 @@ void gpio_terminate(void)
   return;
 }
 
-// pin_init(3, PIN_MODE_OUT);
-void pin_init(unsigned int pin_number, int mode)
+// pin_mode(3, PIN_MODE_OUT);
+void pin_mode(unsigned int pin_number, int mode)
 {
   int num_reg = (pin_number / 10);
   int offset = (pin_number % 10);
-  int addr = gpio_address + GPFSEL0_OFFSET + (REG_GAP * num_reg);
+  int addr = address + GPFSEL0_OFFSET + (REG_GAP * num_reg);
   MEMORY(addr) = SEL(offset, mode);
   return;
 }
 
-void pin_write(unsigned int pin_number)
+void pin_on(unsigned int pin_number)
 {
   int num_reg = (pin_number / 32);
   int offset = (pin_number % 32);
-  int addr = gpio_address + GPSET0_OFFSET + (REG_GAP * num_reg);
+  int addr = address + GPSET0_OFFSET + (REG_GAP * num_reg);
   MEMORY(addr) = SET(offset);
+  return;
+}
+
+void pin_off(unsigned int pin_number)
+{
+  int num_reg = (pin_number / 32);
+  int offset = (pin_number % 32);
+  int addr = address + GPCLR0_OFFSET + (REG_GAP * num_reg);
+  MEMORY(addr) = CLR(offset);
   return;
 }
 
@@ -68,7 +77,7 @@ void gpio_read(unsigned int pin_number)
 {
   int num_sel_reg = (pin_number / 32);
   int offset = (pin_number % 32);
-  int addr = gpio_address + GPLEV0_OFFSET + (REG_GAP * num_sel_reg);
+  int addr = address + GPLEV0_OFFSET + (REG_GAP * num_sel_reg);
 
   MEMORY(addr) = SET(offset);
   return;

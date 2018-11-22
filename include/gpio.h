@@ -30,7 +30,8 @@ extern int page_size;
 
 extern int gpio_init(void);
 extern void gpio_terminate(void);
-extern void pin_init(unsigned int pin_number, int mode);
-extern void pin_write(unsigned int pin_number);
+extern void pin_mode(unsigned int pin_number, int mode);
+extern void pin_on(unsigned int pin_number);
+extern void pin_off(unsigned int pin_number);
 
 #endif

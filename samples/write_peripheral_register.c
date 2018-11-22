@@ -24,7 +24,7 @@
 #define SET(n) (1 << n)
 #define CLR(n) (1 << n)
 
-#define PIN_NUMBER 3
+#define PIN_NUMBER 4
 #define SLEEP_SEC 1
 
 int main(int argc, char* argv[]) {
@@ -47,6 +47,9 @@ int main(int argc, char* argv[]) {
   GPSET0 = SET(PIN_NUMBER);
   sleep(SLEEP_SEC);
   GPCLR0 = CLR(PIN_NUMBER);
+
+  printf("address: %ld\n", (0x00200000 + GPFSEL0_OFFSET));
+  printf("address: %ld\n", (0x00200000 + GPSET0_OFFSET));
 
   munmap((void*)address, PAGE_SIZE);
   close(fd);
