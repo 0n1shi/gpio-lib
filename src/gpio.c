@@ -15,25 +15,21 @@ int file_descriptor;
 int gpio_init(void)
 {
   peripheral_address = bcm_host_get_peripheral_address();
-  gpio_address = peripheral_address + 0x00200000;
-
+  gpio_address = peripheral_address + RELATIVE_GPIO_ADDRESS;
   page_size = getpagesize();
   if (page_size < 0) {
     perror("failed with getpagesize()\n");
     return -1;
   }
-
   if ((file_descriptor = open(DEVICE_FILE, O_RDWR | O_SYNC)) < 0) {
     perror("failed with open()\n");
     return -1;
   }
-
   address = (unsigned int)mmap(NULL, page_size, PROT_READ | PROT_WRITE, MAP_SHARED, file_descriptor, gpio_address);
   if (address == MAP_FAILED) {
     perror("failed with mmap()\n");
     return -1;
   }
-
   return 0;
 }
 
@@ -44,11 +40,10 @@ void gpio_terminate(void)
   return;
 }
 
-// pin_mode(3, PIN_MODE_OUT);
 void pin_mode(unsigned int pin_number, int mode)
 {
-  int num_reg = (pin_number / 10);
-  int offset = (pin_number % 10);
+  int num_reg = (pin_number / NUM_PIN_EACH_SEL_REG);
+  int offset = (pin_number % NUM_PIN_EACH_SEL_REG);
   int addr = address + GPFSEL0_OFFSET + (REG_GAP * num_reg);
   MEMORY(addr) = SEL(offset, mode);
   return;
@@ -56,8 +51,8 @@ void pin_mode(unsigned int pin_number, int mode)
 
 void pin_on(unsigned int pin_number)
 {
-  int num_reg = (pin_number / 32);
-  int offset = (pin_number % 32);
+  int num_reg = (pin_number / NUM_PIN_EACH_REG);
+  int offset = (pin_number % NUM_PIN_EACH_REG);
   int addr = address + GPSET0_OFFSET + (REG_GAP * num_reg);
   MEMORY(addr) = SET(offset);
   return;
@@ -65,38 +60,18 @@ void pin_on(unsigned int pin_number)
 
 void pin_off(unsigned int pin_number)
 {
-  int num_reg = (pin_number / 32);
-  int offset = (pin_number % 32);
+  int num_reg = (pin_number / NUM_PIN_EACH_REG);
+  int offset = (pin_number % NUM_PIN_EACH_REG);
   int addr = address + GPCLR0_OFFSET + (REG_GAP * num_reg);
   MEMORY(addr) = CLR(offset);
   return;
 }
 
-/*
-void gpio_read(unsigned int pin_number)
+int pin_read(unsigned int pin_number)
 {
-  int num_sel_reg = (pin_number / 32);
-  int offset = (pin_number % 32);
+  int num_sel_reg = (pin_number / NUM_PIN_EACH_REG);
+  int offset = (pin_number % NUM_PIN_EACH_REG);
   int addr = address + GPLEV0_OFFSET + (REG_GAP * num_sel_reg);
-
-  MEMORY(addr) = SET(offset);
-  return;
+  unsigned int value = MEMORY(addr);
+  return ((value >> offset) & 1UL);
 }
-
-int pin_init(int pin_number, int pin_mode)
-{
-  int num_sel_reg;
-  int addr;
-  int mode;
-  
-  if (pin_mode == PIN_MODE_IN) {
-    mode = PIN_MODE_IN;
-    num_sel_reg = (pin / 32);
-    addr = gpio_address + GPFSEL0_OFFSET + (REG_GAP * num_sel_reg);
-  } else if (pin_mode == PIN_MODE_OUT) {
-  } else {
-    perror("failed to set pin mode. (invalid mode designated)\n");
-    return -1;
-  }
-}
-*/

@@ -1,3 +1,8 @@
+# GPIO library for study
+
+# Sample
+
+```c
 #include <stdio.h>
 #include <unistd.h>
 
@@ -13,3 +18,12 @@ int main(int argc, char* argv[])
   gpio_terminate();
   return 0;
 }
+```
+
+# Compile
+
+ex.
+
+```bash
+gcc main.c src/gpio.c -I/opt/vc/include -L/opt/vc/lib -lbcm_host -Wimplicit-function-declaration
+```
