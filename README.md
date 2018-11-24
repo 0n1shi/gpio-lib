@@ -32,7 +32,7 @@ gcc main.c src/gpio.c -I/opt/vc/include -L/opt/vc/lib -lbcm_host -Wimplicit-func
 
 ```bash
 $ sudo ./a.out
-pin (26) is on
-pin (26) is off
+pin (4) is on
+pin (4) is off
 $ 
 ```
