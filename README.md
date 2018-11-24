@@ -27,3 +27,12 @@ ex.
 ```bash
 gcc main.c src/gpio.c -I/opt/vc/include -L/opt/vc/lib -lbcm_host -Wimplicit-function-declaration
 ```
+
+# Run
+
+```bash
+$ sudo ./a.out
+pin (26) is on
+pin (26) is off
+$ 
+```
