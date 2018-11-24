@@ -1,4 +1,4 @@
-# GPIO library for study
+# GPIO library for studying
 
 # Sample
 
